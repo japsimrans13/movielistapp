@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:movielistapp/models/movie.dart';
 
 class MovieDetialPage extends StatefulWidget {
@@ -16,7 +18,60 @@ class _MovieDetialPageState extends State<MovieDetialPage> {
       body: Center(
         child: Column(
           children: [
-            buildEditMovie(widget.movie),
+            const Text(
+              'Movie Detail Page',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Movie Name : ',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Text(
+                    widget.movie.name,
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Movie Date : ',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  Text(
+                    getYearMonthDate(widget.movie.createdDate)!,
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                ],
+              ),
+            ),
+            RatingBar.builder(
+              // set initial rating to movie.ratings
+              initialRating: widget.movie.ratings,
+              minRating: 0,
+              direction: Axis.horizontal,
+              allowHalfRating: true,
+              itemCount: 5,
+              ignoreGestures: true,
+              itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+              itemBuilder: (context, _) => const Icon(
+                Icons.star,
+                color: Colors.amber,
+              ),
+              onRatingUpdate: (rating) {},
+            )
           ],
         ),
       ),
@@ -24,8 +79,9 @@ class _MovieDetialPageState extends State<MovieDetialPage> {
   }
 }
 
-Widget buildEditMovie(Movie movie) {
-  return Container(
-    child: Text('Here comes the build widget, movie name : ${movie.name}'),
-  );
+String? getYearMonthDate(DateTime data) {
+  String _day = data.day.toString();
+  String _month = data.month.toString();
+  String _year = data.year.toString();
+  return _day + '-' + _month + '-' + _year;
 }

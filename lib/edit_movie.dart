@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:movielistapp/boxes.dart';
 import 'package:movielistapp/models/movie.dart';
 
@@ -22,6 +23,7 @@ class _EditMovieState extends State<EditMovie> {
   @override
   Widget build(BuildContext context) {
     _movieNameController = TextEditingController(text: widget.movie!.name);
+    double newRating = widget.movie!.ratings;
     return Scaffold(
       appBar: AppBar(),
       body: Center(
@@ -43,6 +45,21 @@ class _EditMovieState extends State<EditMovie> {
                 hintText: 'Enter Movie Name',
               ),
             ),
+            RatingBar.builder(
+              initialRating: widget.movie!.ratings,
+              minRating: 0,
+              direction: Axis.horizontal,
+              allowHalfRating: true,
+              itemCount: 5,
+              itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+              itemBuilder: (context, _) => const Icon(
+                Icons.star,
+                color: Colors.amber,
+              ),
+              onRatingUpdate: (rating) {
+                newRating = rating;
+              },
+            ),
             ElevatedButton(
                 onPressed: () {
                   // Closing keyboard on submit
@@ -51,7 +68,8 @@ class _EditMovieState extends State<EditMovie> {
                   if (_movieNameController.value.text.isNotEmpty) {
                     final newmovie = Movie()
                       ..name = _movieNameController.value.text.toString()
-                      ..createdDate = widget.movie!.createdDate;
+                      ..createdDate = widget.movie!.createdDate
+                      ..ratings = newRating;
                     print('key is :');
                     print(widget.movie!.key);
                     Boxes.updateMovie(widget.movie!.key, newmovie);

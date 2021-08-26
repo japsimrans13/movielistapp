@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:movielistapp/boxes.dart';
 import 'package:movielistapp/main.dart';
 import 'package:movielistapp/models/movie.dart';
@@ -25,6 +26,7 @@ class _AddMovieState extends State<AddMovie> {
 
   @override
   Widget build(BuildContext context) {
+    double curRating = 0;
     return Center(
       child: Column(
         children: [
@@ -43,13 +45,28 @@ class _AddMovieState extends State<AddMovie> {
               hintText: 'Enter Movie Name',
             ),
           ),
+          RatingBar.builder(
+            initialRating: 0,
+            minRating: 0,
+            direction: Axis.horizontal,
+            allowHalfRating: true,
+            itemCount: 5,
+            itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+            itemBuilder: (context, _) => const Icon(
+              Icons.star,
+              color: Colors.amber,
+            ),
+            onRatingUpdate: (rating) {
+              curRating = rating;
+            },
+          ),
           ElevatedButton(
               onPressed: () {
                 // Close keyboard
                 FocusScope.of(context).requestFocus(FocusNode());
                 print(_movieNameController.value.text);
                 if (_movieNameController.value.text.isNotEmpty) {
-                  addMovie(_movieNameController.value.text);
+                  addMovie(_movieNameController.value.text, curRating);
                   // empty keyboard field
                   _movieNameController.clear();
                   // setTabControllerIndex(0);
@@ -66,10 +83,11 @@ class _AddMovieState extends State<AddMovie> {
   }
 }
 
-Future? addMovie(String? movieName) {
+Future? addMovie(String? movieName, double rating) {
   final movie = Movie()
     ..name = movieName!
-    ..createdDate = DateTime.now();
+    ..createdDate = DateTime.now()
+    ..ratings = rating;
 
   // using the getter method for acessing our hive box.
   final dbBox = Boxes.getMovieBox();

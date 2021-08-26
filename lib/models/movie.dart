@@ -8,6 +8,6 @@ class Movie extends HiveObject {
   late String name;
   @HiveField(1)
   late DateTime createdDate;
-//   @HiveField(2)
-//   late int ratings;
+  @HiveField(2)
+  late double ratings;
 }
