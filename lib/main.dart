@@ -4,6 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:movielistapp/add_movie.dart';
 import 'package:movielistapp/models/movie.dart';
 import 'package:movielistapp/movies_list.dart';
+import 'palette.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,9 +20,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Movie List App',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Palette.ProjectThemeColor,
+          // primaryColor: Color(0xFFD800),
         ),
         home: const HomePage());
   }
@@ -43,7 +45,6 @@ class _HomePageState extends State<HomePage>
 
   @override
   void dispose() {
-    // Hive.close();
     Hive.box('movies').close();
     super.dispose();
   }

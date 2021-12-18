@@ -1,8 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:movielistapp/boxes.dart';
-import 'package:movielistapp/main.dart';
 import 'package:movielistapp/models/movie.dart';
+import 'package:movielistapp/helper/dialog_helper.dart';
 
 class AddMovie extends StatefulWidget {
   const AddMovie(this.homeTabController, {Key? key}) : super(key: key);
@@ -15,12 +16,14 @@ class AddMovie extends StatefulWidget {
 
 class _AddMovieState extends State<AddMovie> {
   final _movieNameController = TextEditingController();
+  final _movieCategoryController = TextEditingController();
 
   // get _gettabController => widget.tabController;
 
   @override
   void dispose() {
     _movieNameController.dispose();
+    _movieCategoryController.dispose();
     super.dispose();
   }
 
@@ -45,6 +48,13 @@ class _AddMovieState extends State<AddMovie> {
               hintText: 'Enter Movie Name',
             ),
           ),
+          TextFormField(
+            controller: _movieCategoryController,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: 'Enter Movie Category',
+            ),
+          ),
           RatingBar.builder(
             initialRating: 0,
             minRating: 0,
@@ -64,17 +74,23 @@ class _AddMovieState extends State<AddMovie> {
               onPressed: () {
                 // Close keyboard
                 FocusScope.of(context).requestFocus(FocusNode());
-                print(_movieNameController.value.text);
-                if (_movieNameController.value.text.isNotEmpty) {
-                  addMovie(_movieNameController.value.text, curRating);
+                // print(_movieNameController.value.text);
+                // print(_movieCategoryController.value.text);
+                if (_movieNameController.value.text.isNotEmpty &&
+                    _movieCategoryController.value.text.isNotEmpty) {
+                  addMovie(_movieNameController.value.text, curRating,
+                      _movieCategoryController.value.text);
                   // empty keyboard field
                   _movieNameController.clear();
+                  _movieCategoryController.clear();
                   // setTabControllerIndex(0);
                   widget.homeTabController!.index = 0;
-                  // show pop up message that new movie added.
+                  print('Movie added');
+                  showPopUpToast('Movie Added');
+                } else {
+                  print('The movie name is empty or category name is empty');
+                  showPopUpToast('Please fill all the details');
                 }
-                print('The movie name is empty');
-                // show here a popup message:
               },
               child: const Text('Add Movie')),
         ],
@@ -83,11 +99,12 @@ class _AddMovieState extends State<AddMovie> {
   }
 }
 
-Future? addMovie(String? movieName, double rating) {
+Future? addMovie(String? movieName, double rating, String category) {
   final movie = Movie()
     ..name = movieName!
     ..createdDate = DateTime.now()
-    ..ratings = rating;
+    ..ratings = rating
+    ..category = category;
 
   // using the getter method for acessing our hive box.
   final dbBox = Boxes.getMovieBox();

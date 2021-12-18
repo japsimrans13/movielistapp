@@ -27,15 +27,15 @@ class _MovieDetialPageState extends State<MovieDetialPage> {
             ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 20),
-              child: Row(
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text(
-                    'Movie Name : ',
+                  Text(
+                    'Movie Name : ${widget.movie.name}',
                     style: TextStyle(fontSize: 20),
                   ),
                   Text(
-                    widget.movie.name,
+                    'Category : ${widget.movie.category}',
                     style: const TextStyle(fontSize: 20),
                   ),
                 ],
@@ -47,7 +47,7 @@ class _MovieDetialPageState extends State<MovieDetialPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    'Movie Date : ',
+                    'Date created : ',
                     style: TextStyle(fontSize: 20),
                   ),
                   Text(
